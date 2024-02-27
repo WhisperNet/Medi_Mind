@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "382156499483",
+    "project_id": "medi-mind",
+    "storage_bucket": "medi-mind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382156499483:android:9193017162a702c9b926be",
+        "android_client_info": {
+          "package_name": "com.example.medimind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs1w4Wtiowl4xshIB2a5mVd7RwJwnkFk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
