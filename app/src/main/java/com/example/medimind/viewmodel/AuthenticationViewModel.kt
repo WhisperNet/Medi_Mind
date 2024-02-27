@@ -7,13 +7,21 @@ import com.example.medimind.data.User
 import com.example.medimind.util.Constants.TAG
 import com.example.medimind.util.Constants.USERS_NODE
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthenticationViewModel: ViewModel() {
 
-    private val  auth = Firebase.auth
+@HiltViewModel
+class AuthenticationViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+): ViewModel() {
+
 
     fun signUp(email: String, password: String, user: User) = viewModelScope.launch {
         try {
@@ -43,7 +51,7 @@ class AuthenticationViewModel: ViewModel() {
 
 
     private fun createUser(user: User) {
-        val db = Firebase.firestore
+
         try {
             db.collection(USERS_NODE).document(user.email).set(user.toMap())
         } catch (e: Exception) {

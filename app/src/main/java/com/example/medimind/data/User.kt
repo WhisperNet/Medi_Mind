@@ -1,10 +1,10 @@
 package com.example.medimind.data
 
 data class User(
-    val name: String = "",
-    val address: String = "",
-    val phoneNo: String = "",
-    val email: String = "",
+    var name: String = "",
+    var address: String = "",
+    var phoneNo: String = "",
+    var email: String = "",
 ) {
     fun toMap(): Map<String, Any> = mapOf(
         "name" to name,

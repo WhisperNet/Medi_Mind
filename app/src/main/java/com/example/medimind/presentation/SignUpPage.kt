@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medimind.data.User
 import com.example.medimind.viewmodel.AuthenticationViewModel
@@ -25,7 +26,7 @@ import com.example.medimind.viewmodel.UserViewModel
 
 @Composable
 fun SignUpPage(
-    viewModel: AuthenticationViewModel = viewModel(),
+    viewModel: AuthenticationViewModel = hiltViewModel(),
     navigateToHomePage: () -> Unit
 ) {
     var name by rememberSaveable { mutableStateOf("") }
