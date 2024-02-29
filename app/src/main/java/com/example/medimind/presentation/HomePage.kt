@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
@@ -29,37 +30,15 @@ import com.example.medimind.data.Response
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
 fun HomePage(
-    viewModel: UserViewModel? = null
+    viewModel: UserViewModel = hiltViewModel()
 ) {
 
-    val uiState by viewModel?.userState?.collectAsState()!!
+    val uiState by viewModel.userState.collectAsState()
 
     when(uiState) {
         is Response.Failure -> Text(text = "Failure")
         Response.Loading -> Text(text = "Loading")
-        is Response.Success -> uiState.data?.let { user ->
-            Column (
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .padding(24.dp)
-                        .shadow(10.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
-                    }
-                    Text(text = "MediMind")
-                    Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourite Icon")
-                }
-            }
-        }
+        is Response.Success -> HomeContent()
     }
 
 }
