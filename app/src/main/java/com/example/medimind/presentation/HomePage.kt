@@ -32,7 +32,8 @@ fun HomePage(
                     onMenuIconClick = { onMenuIconClick() },
                     onVIewAllMedicationClick = { onViewAllMedicationClick() },
                     onViewAllEventsClick = { onViewAllEventClick() },
-                    onButtonClick = { onButtonClick() }
+                    onButtonClick = { onButtonClick() },
+                    user = it
                 )
             }
         }

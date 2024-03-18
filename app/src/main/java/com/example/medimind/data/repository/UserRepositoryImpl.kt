@@ -48,7 +48,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun createEvent(event: Event, email: String): Flow<Response<Event>> = flow {
         emit(Response.Loading)
-        firestore.collection(USERS_NODE).document(email).collection(event.type)
+        firestore.collection(USERS_NODE).document(email).collection(if (event.type == "Vaccination") "Event" else event.type)
             .document(event.name).set(event.toMap()).await()
         emit(Response.Success(event))
     }.catch {
