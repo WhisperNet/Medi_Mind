@@ -156,7 +156,7 @@ fun MedicationListScreen(
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text(text = "${it.hour}:${it.minute}", fontWeight = FontWeight.SemiBold)
+//                                Text(text = "${it.hour}:${it.minute}", fontWeight = FontWeight.SemiBold)
                             }
                             Spacer(modifier = Modifier.weight(1f))
                             Box(modifier = Modifier
@@ -173,7 +173,7 @@ fun MedicationListScreen(
                                 )
                             }
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Available: ${it.available}")
+//                            Text(text = "Available: ${it.available}")
                         }
                     }
                 }

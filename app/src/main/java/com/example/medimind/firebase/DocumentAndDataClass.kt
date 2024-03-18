@@ -1,6 +1,6 @@
 package com.example.medimind.firebase
 
-import com.example.medimind.data.model.Medication
+import com.example.medimind.data.model.Event
 import com.example.medimind.data.model.User
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -14,12 +14,19 @@ object DocumentAndDataClass {
         return  User(name, address, phoneNo, email)
     }
 
-    fun getMedicationFromFirebase(document: DocumentSnapshot): Medication {
+    fun getEventFromFirebase(document: DocumentSnapshot): Event {
+        val type = document["type"].toString()
         val name = document["name"].toString()
-        val hour = document["hour"].toString()
-        val minute = document["minute"].toString()
-        val available = document["available"] as Int
+        val date = document["date"].toString()
+        val time = document["time"].toString()
+        val stock = document["stock"] as Int
 
-        return Medication(name, hour, minute, available)
+        return Event(
+            type = type,
+            name = name,
+            date = date,
+            time = time,
+            stock = stock
+        )
     }
  }
