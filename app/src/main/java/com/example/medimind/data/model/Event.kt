@@ -1,4 +1,4 @@
-package com.example.medimind.data
+package com.example.medimind.data.model
 
 import com.google.type.DateTime
 

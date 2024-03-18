@@ -1,4 +1,4 @@
-package com.example.medimind.data
+package com.example.medimind.domain.model
 
 sealed class Response<out T>(
     val data: T? = null,

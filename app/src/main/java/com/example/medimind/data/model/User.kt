@@ -1,4 +1,4 @@
-package com.example.medimind.data
+package com.example.medimind.data.model
 
 data class User(
     var name: String = "",

@@ -11,8 +11,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessAlarms
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.medimind.presentation.components.DropDownField
@@ -53,14 +58,17 @@ fun AddNewReminderPage(onSaveClick: () -> Unit) {
             fontSize = 32.sp
         )
 
-        Icon(
-            imageVector = Icons.Filled.AccessAlarms,
-            contentDescription = "Alarm Icon",
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(72.dp)
-                .padding(4.dp)
-        )
+        ElevatedCard (shape = CircleShape, elevation = CardDefaults.elevatedCardElevation(5.dp), colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)) {
+            Icon(
+                imageVector = Icons.Filled.AccessAlarms,
+                contentDescription = "Alarm Icon",
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(72.dp)
+                    .padding(8.dp)
+            )
+        }
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -84,5 +92,14 @@ fun AddNewReminderPage(onSaveClick: () -> Unit) {
         ) {
             Text(text = "Save", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White)
         }
+    }
+}
+
+
+@Preview(showSystemUi = true)
+@Composable
+fun AddNewPreview() {
+    AddNewReminderPage {
+
     }
 }

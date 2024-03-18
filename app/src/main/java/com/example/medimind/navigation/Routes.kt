@@ -4,4 +4,7 @@ enum class Routes {
     SignUp,
     SignIn,
     Home,
+    MeditationList,
+    UpcomingEvents,
+    AddNew
 }

@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
@@ -24,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NewMedicationContent(
+fun UpcomingEventsScreen(
     onIconClick: () -> Unit,
     onButtonClick: () -> Unit
 ) {
@@ -49,8 +50,8 @@ fun NewMedicationContent(
             IconButton(onClick = onIconClick) {
                 Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Navigate Back Icon", modifier = Modifier.rotate(90f))
             }
-            Text(text = "Medication List", fontWeight = FontWeight.Bold)
-            Icon(imageVector = Icons.Default.Medication, contentDescription = "Medication Icon")
+            Text(text = "Upcoming Events", fontWeight = FontWeight.Bold)
+            Icon(imageVector = Icons.Default.EventAvailable, contentDescription = "Medication Icon")
         }
 
         Column(
@@ -66,7 +67,7 @@ fun NewMedicationContent(
             Card(modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 100.dp)) {
-                Text(text = "Medications", modifier = Modifier.height(48.dp))
+                Text(text = "Events", modifier = Modifier.height(48.dp))
             }
         }
 
@@ -80,5 +81,13 @@ fun NewMedicationContent(
         ) {
             Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White, )
         }
+    }
+}
+
+@Preview (showSystemUi = true)
+@Composable
+fun PreviewNewEvent() {
+    UpcomingEventsScreen(onIconClick = { /*TODO*/ }) {
+        
     }
 }

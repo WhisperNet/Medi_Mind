@@ -30,100 +30,93 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.medimind.presentation.components.ViewAll
+import com.example.medimind.viewmodel.UserViewModel
 
 @Composable
-fun HomeContent() {
+fun HomeContent(
+    viewModel: UserViewModel,
+    onMenuIconClick: () -> Unit,
+    onVIewAllMedicationClick: () -> Unit,
+    onViewAllEventsClick: () -> Unit,
+    onButtonClick: () -> Unit,
+) {
 
-    var goToMedication by rememberSaveable { mutableStateOf(false) }
-    var goToEvents by rememberSaveable { mutableStateOf(false) }
-    var addNew by rememberSaveable { mutableStateOf(false) }
-    
-    if(goToMedication) {
-        NewMedicationContent(onIconClick = {goToMedication = false}, onButtonClick = { addNew = true } )
-    } else if(goToEvents) {
-        NewEventContent(onIconClick = {goToEvents = false}, onButtonClick = { addNew = true } )
-    } else if (addNew) {
-        AddNewReminderPage {
-            addNew = false
-            goToEvents = false
-            goToMedication = false
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 48.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.1f)
+                .padding(end = 24.dp, start = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = {
+                onMenuIconClick()
+            }) {
+                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
+            }
+            Text(text = "MediMind", fontWeight = FontWeight.Bold)
+            Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourite Icon")
         }
-    }  else {
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 48.dp),
+                .fillMaxWidth()
+                .weight(8f)
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.1f)
-                    .padding(end = 24.dp, start = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu Icon")
+                ViewAll(
+                    title = "Current Medications",
+                    modifier = Modifier.fillMaxWidth(),
+                    onViewALlClick = { onVIewAllMedicationClick() }
+                )
+
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 100.dp)) {
+                    Text(text = "Medications", modifier = Modifier.height(48.dp))
                 }
-                Text(text = "MediMind", fontWeight = FontWeight.Bold)
-                Icon(imageVector = Icons.Default.Favorite, contentDescription = "Favourite Icon")
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(8f)
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Column(modifier = Modifier
+                ViewAll(
+                    title = "Upcoming Events",
+                    modifier = Modifier.fillMaxWidth(),
+                    onViewALlClick = { onViewAllEventsClick() }
+                )
+
+                Card(modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .heightIn(max = 152.dp)
                 ) {
-                    ViewAll(
-                        title = "Current Medications",
-                        modifier = Modifier.fillMaxWidth(),
-                        onViewALlClick = { goToMedication = true }
-                    )
-
-                    Card(modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 100.dp)) {
-                        Text(text = "Medications", modifier = Modifier.height(48.dp))
-                    }
-                }
-
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    ViewAll(
-                        title = "Upcoming Events",
-                        modifier = Modifier.fillMaxWidth(),
-                        onViewALlClick = {goToEvents = true}
-                    )
-
-                    Card(modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 152.dp)
-                    ) {
-                        Text(text = "Events", modifier = Modifier.height(48.dp))
-                    }
+                    Text(text = "Events", modifier = Modifier.height(48.dp))
                 }
             }
+        }
 
 
-            ElevatedButton(
-                onClick = { addNew = true },
-                shape = RoundedCornerShape(15)
-            ) {
-                Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.Black)
-            }
+        ElevatedButton(
+            onClick = { onButtonClick() },
+            shape = RoundedCornerShape(15)
+        ) {
+            Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.Black)
         }
     }
 }
