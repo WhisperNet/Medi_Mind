@@ -14,13 +14,18 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HealthAndSafety
+import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
@@ -101,10 +106,31 @@ fun HomeContent(
                     onViewALlClick = { onVIewAllMedicationClick() }
                 )
 
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 100.dp)) {
-                    Text(text = "Medications", modifier = Modifier.height(48.dp))
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .height(256.dp)
+                        .fillMaxWidth()
+                ) {
+                    items(
+                        items = medicationList
+                    ) {
+                        ElevatedCard (
+                            modifier = Modifier.size(104.dp)
+                        ) {
+                            Column (
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(imageVector = Icons.Default.Medication, contentDescription = "Medication Icon", modifier = Modifier.size(48.dp))
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(text = it.name, fontWeight = FontWeight.SemiBold)
+                            } 
+                        }
+                    }
                 }
             }
 

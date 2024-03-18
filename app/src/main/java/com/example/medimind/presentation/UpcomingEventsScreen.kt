@@ -60,7 +60,6 @@ fun UpcomingEventsScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
@@ -77,86 +76,90 @@ fun UpcomingEventsScreen(
             Icon(imageVector = Icons.Default.EventAvailable, contentDescription = "Medication Icon")
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .height(560.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(
-                items = eventList
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .weight(8f)) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .height(560.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
+                items(
+                    items = eventList
                 ) {
-                    Column(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 4.dp)
+                    ElevatedCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 4.dp)
                         ) {
                             Row(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .wrapContentWidth(),
+                                    .fillMaxWidth()
+                                    .height(48.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.HealthAndSafety,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(text = it.name, fontWeight = FontWeight.Bold)
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(15))
-                                    .background(Color.Black)
-                                    .clickable {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .wrapContentWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.HealthAndSafety,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(text = it.name, fontWeight = FontWeight.Bold)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(15))
+                                        .background(Color.Black)
+                                        .clickable {
 
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = it.date,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(8.dp)
-                                )
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = it.date,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(8.dp)
+                                    )
+                                }
                             }
-                        }
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
                             Row(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .wrapContentWidth(),
+                                    .fillMaxWidth()
+                                    .height(48.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Alarm,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(text = it.time, fontWeight = FontWeight.SemiBold)
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .wrapContentWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Alarm,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(text = it.time, fontWeight = FontWeight.SemiBold)
+                                }
                             }
                         }
                     }
@@ -164,16 +167,20 @@ fun UpcomingEventsScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(48.dp))
 
-
-        ElevatedButton(
-            onClick = onButtonClick,
-            shape = RoundedCornerShape(15),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black
-            )
-        ) {
-            Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White, )
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+            ElevatedButton(
+                onClick = onButtonClick,
+                shape = RoundedCornerShape(15),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                )
+            ) {
+                Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White, )
+            }
         }
     }
 }
