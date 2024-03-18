@@ -41,7 +41,7 @@ class UserViewModel @Inject constructor(
 
     init {
         val currentUser = userRepo.currentUser
-        if(currentUser.email != null) {
+        if(currentUser != null && currentUser.email != null) {
             getUser(currentUser.email!!)
         }
     }

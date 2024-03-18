@@ -19,8 +19,11 @@ class AuthRepositoryImpl @Inject constructor(
 ): AuthRepository {
     override fun signUp(email: String, password: String, user: User): Flow<Response<Boolean>> = flow {
         emit(Response.Loading)
-        auth.createUserWithEmailAndPassword(email, password).await()
-        firestore.collection(USERS_NODE).document(user.email).set(user.toMap()).await()
+        auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+            if (it != null) {
+                firestore.collection(USERS_NODE).document(user.email).set(user.toMap())
+            }
+        }.await()
         emit(Response.Success(true))
     }.catch {
         Log.d(TAG, "signUp: ${it.localizedMessage}")

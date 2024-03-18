@@ -7,10 +7,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 object DocumentAndDataClass {
 
     fun getUserFromFirebase(document: DocumentSnapshot): User {
-        val name = document["name"] as String
-        val address = document["address"] as String
-        val email = document["email"] as String
-        val phoneNo = document["phone_no"] as String
+        val name = document["name"].toString()
+        val address = document["address"].toString()
+        val email = document["email"].toString()
+        val phoneNo = document["phone_no"].toString()
         return  User(name, address, phoneNo, email)
     }
 

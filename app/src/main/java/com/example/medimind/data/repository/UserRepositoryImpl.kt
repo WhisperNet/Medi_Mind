@@ -20,8 +20,8 @@ class UserRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ): UserRepository {
-    override val currentUser: FirebaseUser
-        get() = auth.currentUser!!
+    override val currentUser: FirebaseUser?
+        get() = auth.currentUser
 
     override fun getUser(email: String): Flow<Response<User>> = callbackFlow {
         val snapshotListener = firestore.collection(USERS_NODE)
