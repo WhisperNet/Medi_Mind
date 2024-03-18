@@ -14,4 +14,5 @@ interface UserRepository {
 
     fun getMedication(email: String): Flow<List<Event>>
     fun createEvent(event: Event, email: String): Flow<Response<Event>>
+    fun updateMedicationStock(eventId: String, email: String, currentStock: Int): Flow<Response<Boolean>>
 }

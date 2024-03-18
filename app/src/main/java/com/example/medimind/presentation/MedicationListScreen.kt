@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.HealthAndSafety
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Medication
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -43,9 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.medimind.viewmodel.UserViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
 
 @Composable
 fun MedicationListScreen(
@@ -54,6 +52,10 @@ fun MedicationListScreen(
     viewModel: UserViewModel = hiltViewModel()
 ) {
 
+    val userState by viewModel.userState.collectAsState()
+    if (userState.data != null) {
+        viewModel.getMedications(userState.data!!.email)
+    }
     val medicationList by viewModel.medicationItems.collectAsState()
 
     Column(
@@ -81,12 +83,12 @@ fun MedicationListScreen(
             Icon(imageVector = Icons.Default.Medication, contentDescription = "Medication Icon")
         }
 
-
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .height(560.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(
                 items = medicationList
@@ -123,17 +125,21 @@ fun MedicationListScreen(
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(text = it.name, fontWeight = FontWeight.Bold)
                             }
-                            Box(modifier = Modifier
-                                .clip(RoundedCornerShape(15))
-                                .width(64.dp)
-                                .height(25.dp)
-                                .background(Color.Black)
-                                .clickable {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(15))
+                                    .background(Color.Black)
+                                    .clickable {
 
-                                },
+                                    },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "Restock", color = Color.White, fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "Restock",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(8.dp)
+                                )
                             }
                         }
 
@@ -156,24 +162,20 @@ fun MedicationListScreen(
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-//                                Text(text = "${it.hour}:${it.minute}", fontWeight = FontWeight.SemiBold)
+                                Text(text = it.time, fontWeight = FontWeight.SemiBold)
                             }
                             Spacer(modifier = Modifier.weight(1f))
-                            Box(modifier = Modifier
-                                .clip(RoundedCornerShape(30))
-                                .size(20.dp)
-                                .background(Color.Black)
-                                .clickable { },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "-",
-                                    fontSize = 20.sp,
-                                    color = Color.White
-                                )
-                            }
+                            Text(text = "Stock: ${it.stock}")
                             Spacer(modifier = Modifier.width(6.dp))
-//                            Text(text = "Available: ${it.available}")
+                            Icon(
+                                imageVector = Icons.Default.RemoveCircleOutline,
+                                contentDescription = null,
+                                modifier = Modifier.clickable {
+                                    if (it.stock != 0) {
+                                        userState.data?.let { user -> viewModel.updateMedicationStock(it.name, user.email, it.stock -1) }
+                                    }
+                                }
+                            )
                         }
                     }
                 }

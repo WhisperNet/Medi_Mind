@@ -19,14 +19,14 @@ object DocumentAndDataClass {
         val name = document["name"].toString()
         val date = document["date"].toString()
         val time = document["time"].toString()
-        val stock = document["stock"] as Int
+        val stock = document["stock"] as Long
 
         return Event(
             type = type,
             name = name,
             date = date,
             time = time,
-            stock = stock
+            stock = stock.toInt()
         )
     }
  }

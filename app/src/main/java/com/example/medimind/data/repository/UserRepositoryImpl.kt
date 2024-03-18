@@ -51,6 +51,13 @@ class UserRepositoryImpl @Inject constructor(
         firestore.collection(USERS_NODE).document(email).collection(event.type)
             .document(event.name).set(event.toMap()).await()
         emit(Response.Success(event))
+    }.catch {
+        Log.d(TAG, "createEvent: ${it.localizedMessage}")
+    }
+
+    override fun updateMedicationStock(eventId: String, email: String, currentStock: Int): Flow<Response<Boolean>> = flow {
+        firestore.collection(USERS_NODE).document(email).collection("Medication")
+            .document(eventId).update("stock",currentStock)
     }
 
     override fun getEvent(email: String): Flow<List<Event>> = callbackFlow {

@@ -32,6 +32,8 @@ class UserViewModel @Inject constructor(
         val currentUser = userRepo.currentUser
         if(currentUser != null && currentUser.email != null) {
             getUser(currentUser.email!!)
+            getEvents(currentUser.email!!)
+            getMedications(currentUser.email!!)
         }
     }
 
@@ -56,6 +58,13 @@ class UserViewModel @Inject constructor(
     fun getEvents(email: String) = viewModelScope.launch {
         userRepo.getEvent(email).collectLatest {
             _eventItems.value = it
+        }
+    }
+
+
+    fun updateMedicationStock(eventId: String, email: String, currentStock: Int) = viewModelScope.launch {
+        userRepo.updateMedicationStock(eventId, email, currentStock).collectLatest {
+
         }
     }
 

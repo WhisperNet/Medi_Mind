@@ -23,13 +23,19 @@ fun HomePage(
     when (uiState) {
         is Response.Failure -> Text(text = "Failure")
         Response.Loading -> Text(text = "Loading")
-        is Response.Success -> HomeContent(
-            viewModel,
-            onMenuIconClick = { onMenuIconClick() },
-            onVIewAllMedicationClick = { onViewAllMedicationClick() },
-            onViewAllEventsClick = { onViewAllEventClick() },
-            onButtonClick = { onButtonClick() }
-        )
+        is Response.Success -> {
+            uiState.data?.let {
+                viewModel.getMedications(it.email)
+                viewModel.getEvents(it.email)
+                HomeContent(
+                    viewModel,
+                    onMenuIconClick = { onMenuIconClick() },
+                    onVIewAllMedicationClick = { onViewAllMedicationClick() },
+                    onViewAllEventsClick = { onViewAllEventClick() },
+                    onButtonClick = { onButtonClick() }
+                )
+            }
+        }
     }
 
 }
