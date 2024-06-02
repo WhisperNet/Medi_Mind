@@ -1,5 +1,6 @@
 package com.example.medimind.presentation.main.home.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,21 +25,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HealthAndSafety
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -47,9 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.medimind.R
 import com.example.medimind.domain.events.HomeUIEvent
 import com.example.medimind.presentation.SharedViewModel
 import com.example.medimind.presentation.components.ViewAll
@@ -248,6 +244,7 @@ fun HomeContent(
                         .background(Color.White)
                         .padding(bottom = 24.dp)
                 ) {
+
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -256,6 +253,14 @@ fun HomeContent(
                             .padding(top = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        Box(modifier = Modifier, contentAlignment = Alignment.Center) {
+                            Image(
+                                painter = painterResource(id = R.drawable.medi_mind_white),
+                                contentDescription = "medi_mind_logo",
+                                modifier = Modifier.size(72.dp)
+                            )
+                        }
+
                         Text(
                             text = user.name,
                             fontWeight = FontWeight.Black,
@@ -275,7 +280,7 @@ fun HomeContent(
                                 color = Color.White,
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = user.address, color = Color.White,)
+                            Text(text = user.address, color = Color.White)
 
                         }
                         Row (
@@ -313,30 +318,30 @@ fun HomeContent(
                             )
                         }
                         Spacer(modifier = Modifier.height(24.dp))
-                        ElevatedButton(
-                            onClick = {
-                                sharedViewModel.onHomeUIEvent(HomeUIEvent.SignOutButtonClicked)
-                            },
-                            shape = RectangleShape,
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = Color.Black,
-                                containerColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.End)
-                        ) {
-                            Text(
-                                text = "Sign Out",
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(imageVector = Icons.Default.Logout, contentDescription = "")
-                        }
                     }
 
+                    ElevatedButton(
+                        onClick = {
+                            sharedViewModel.onHomeUIEvent(HomeUIEvent.SignOutButtonClicked)
+                        },
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.Black,
+                            containerColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.End)
+                    ) {
+                        Text(
+                            text = "Sign Out",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(imageVector = Icons.Default.Logout, contentDescription = "")
+                    }
                 }
 
 
