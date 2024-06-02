@@ -3,6 +3,7 @@ package com.example.medimind.di
 import com.example.medimind.data.repository.AuthRepositoryImpl
 import com.example.medimind.data.repository.UserRepositoryImpl
 import com.example.medimind.domain.repository.AuthRepository
+import com.example.medimind.domain.repository.UserPref
 import com.example.medimind.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,13 +21,13 @@ class RepositoryModule {
     @Singleton
     fun providesAuthRepository(
         auth: FirebaseAuth,
-        firestore: FirebaseFirestore
-    ): AuthRepository = AuthRepositoryImpl (auth, firestore)
+        firestore: FirebaseFirestore,
+        userPref: UserPref
+    ): AuthRepository = AuthRepositoryImpl (auth, firestore, userPref)
 
     @Provides
     @Singleton
     fun providesUserRepository(
-        auth: FirebaseAuth,
-        firestore: FirebaseFirestore
-    ): UserRepository = UserRepositoryImpl (auth, firestore)
+        firestore: FirebaseFirestore,
+    ): UserRepository = UserRepositoryImpl (firestore)
 }

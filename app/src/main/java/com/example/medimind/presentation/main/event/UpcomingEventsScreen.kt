@@ -1,4 +1,4 @@
-package com.example.medimind.presentation
+package com.example.medimind.presentation.main.event
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,9 +23,7 @@ import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.HealthAndSafety
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -34,27 +31,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.medimind.viewmodel.UserViewModel
+import com.example.medimind.domain.events.EventUIEvent
+import com.example.medimind.presentation.SharedViewModel
 
 @Composable
 fun UpcomingEventsScreen(
-    onIconClick: () -> Unit,
-    onButtonClick: () -> Unit,
-    userViewModel: UserViewModel = hiltViewModel()
+    sharedViewModel: SharedViewModel,
+    onNavigateBackIconClick: () -> Unit,
+    onAddNewButtonClick: () -> Unit
 ) {
 
-    val eventList by userViewModel.eventItems.collectAsState()
+    val eventList = sharedViewModel.eventItems.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -69,16 +64,22 @@ fun UpcomingEventsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onIconClick) {
-                Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Navigate Back Icon", modifier = Modifier.rotate(90f))
+            IconButton(onClick = onNavigateBackIconClick) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Navigate Back Icon",
+                    modifier = Modifier.rotate(90f)
+                )
             }
             Text(text = "Upcoming Events", fontWeight = FontWeight.Bold)
             Icon(imageVector = Icons.Default.EventAvailable, contentDescription = "Medication Icon")
         }
 
-        Column (modifier = Modifier
-            .fillMaxWidth()
-            .weight(8f)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(8f)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -169,26 +170,28 @@ fun UpcomingEventsScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             ElevatedButton(
-                onClick = onButtonClick,
+                onClick = {
+                    sharedViewModel.onUpcomingEventsUIEvent(EventUIEvent.AddNewButtonClicked)
+                    onAddNewButtonClick()
+                },
                 shape = RoundedCornerShape(15),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
                 )
             ) {
-                Text(text = "Add New", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White, )
+                Text(
+                    text = "Add New",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color.White
+                )
             }
         }
     }
-}
-
-@Preview (showSystemUi = true)
-@Composable
-fun PreviewNewEvent() {
-//    UpcomingEventsScreen(onIconClick = { /*TODO*/ }) {
-//
-//    }
 }

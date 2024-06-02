@@ -1,29 +1,36 @@
 package com.example.medimind.navigation
 
-import androidx.activity.OnBackPressedDispatcher
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.medimind.presentation.HomePage
+import com.example.medimind.presentation.main.home.HomePage
 import androidx.navigation.NavController
-import com.example.medimind.presentation.AddNewReminderPage
-import com.example.medimind.presentation.MedicationListScreen
-import com.example.medimind.presentation.SignInPage
-import com.example.medimind.presentation.SignUpPage
-import com.example.medimind.presentation.UpcomingEventsScreen
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.example.medimind.presentation.SharedViewModel
+import com.example.medimind.presentation.main.add_reminder.AddNewReminderScreen
+import com.example.medimind.presentation.main.medication.MedicationListScreen
+import com.example.medimind.presentation.auth.sign_in.SignInPage
+import com.example.medimind.presentation.auth.sign_up.SignUpPage
+import com.example.medimind.presentation.main.event.UpcomingEventsScreen
+import com.example.medimind.util.Constants.TAG
 
 @Composable
 fun MediMindApp() {
+
+    val sharedViewModel: SharedViewModel = hiltViewModel()
+    val user = sharedViewModel.user.collectAsState().value
+    Log.d(TAG, "MediMindApp: $user")
 
     val navController: NavHostController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = if (Firebase.auth.currentUser != null) {
+        startDestination = if (user.email.isNotBlank()) {
             Routes.Home.name
         } else {
             Routes.SignIn.name
@@ -41,14 +48,22 @@ fun MediMindApp() {
             SignUpPage(
                 navigateToHomePage = {
                     navigateTo(navController, Routes.Home.name)
+                },
+                navigateToSignInPage = {
+                    navigateTo(navController, Routes.SignIn.name)
                 }
             )
         }
 
         composable(route = Routes.Home.name) {
             HomePage(
-                onMenuIconClick = { /*TODO*/ },
-                onViewAllMedicationClick = { navigateTo(navController, Routes.MeditationList.name) },
+                sharedViewModel = sharedViewModel,
+                onViewAllMedicationClick = {
+                    navigateTo(
+                        navController,
+                        Routes.MeditationList.name
+                    )
+                },
                 onViewAllEventClick = { navigateTo(navController, Routes.UpcomingEvents.name) },
                 onButtonClick = { navigateWithoutPop(navController, Routes.AddNew.name) }
             )
@@ -56,6 +71,7 @@ fun MediMindApp() {
 
         composable(route = Routes.MeditationList.name) {
             MedicationListScreen(
+                sharedViewModel = sharedViewModel,
                 onIconClick = {
                     navigateTo(navController, Routes.Home.name)
                 },
@@ -67,20 +83,22 @@ fun MediMindApp() {
 
         composable(route = Routes.UpcomingEvents.name) {
             UpcomingEventsScreen(
-                onIconClick = {
+                sharedViewModel = sharedViewModel,
+                onNavigateBackIconClick = {
                     navigateTo(navController, Routes.Home.name)
                 },
-                onButtonClick = {
+                onAddNewButtonClick = {
                     navigateWithoutPop(navController, Routes.AddNew.name)
                 }
             )
         }
 
         composable(route = Routes.AddNew.name) {
-            AddNewReminderPage(
-                onSaveClick = {
-                    navController.popBackStack()
-                }
+            AddNewReminderScreen(
+                sharedViewModel = sharedViewModel,
+                navigateBack = {
+                    navigateBack(navController)
+                },
             )
         }
     }
@@ -98,4 +116,10 @@ private fun navigateTo(navController: NavController, route: String) {
 
 private fun navigateWithoutPop(navController: NavController, route: String) {
     navController.navigate(route)
+}
+
+private fun navigateBack(navController: NavController) {
+    if (navController.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+        navController.popBackStack()
+    }
 }

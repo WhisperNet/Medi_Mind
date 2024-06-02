@@ -1,4 +1,4 @@
-package com.example.medimind.presentation
+package com.example.medimind.presentation.main.add_reminder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessAlarms
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -21,10 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,31 +27,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.medimind.data.model.Event
+import com.example.medimind.domain.events.AddNewReminderUIEvent
+import com.example.medimind.presentation.SharedViewModel
 import com.example.medimind.presentation.components.DropDownField
 import com.example.medimind.presentation.components.Field
-import com.example.medimind.viewmodel.UserViewModel
+import com.example.medimind.util.Constants.ALL_EVENTS
+import com.example.medimind.util.Constants.MEDICATION_EVENTS
 
 @Composable
-fun AddNewReminderPage(
-    onSaveClick: () -> Unit,
-    userViewModel: UserViewModel = hiltViewModel()
+fun AddNewReminderScreen(
+    sharedViewModel: SharedViewModel,
+    navigateBack: () -> Unit,
 ) {
 
-    val types = listOf("Medication", "Event", "Vaccination")
-
-    var type by rememberSaveable { mutableStateOf(types[0]) }
-
-    var name by rememberSaveable { mutableStateOf("") }
-    var date by rememberSaveable { mutableStateOf("") }
-    var time by rememberSaveable { mutableStateOf("") }
-    var stock by rememberSaveable { mutableStateOf("") }
-
-    val userState by userViewModel.userState.collectAsState()
+    val uiState = sharedViewModel.addNewReminderUIState.collectAsState().value
+    val eventFrom = sharedViewModel.eventFrom.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -92,34 +79,50 @@ fun AddNewReminderPage(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DropDownField(
-                itemsList = types,
-                selectedItem = type,
-                onItemChange = { type = it },
-                title = "Type"
-            )
+            if (eventFrom != 2) {
+                DropDownField(
+                    itemsList = if (eventFrom == 1) {
+                        MEDICATION_EVENTS
+                    } else {
+                        ALL_EVENTS
+                    },
+                    selectedItem = uiState.type,
+                    onItemChange = { type ->
+                        sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.TypeChanged(type))
+                    },
+                    title = "Type"
+                )
+            }
             Field(
                 title = "Name",
-                value = name,
-                onValueChange = { name = it },
+                value = uiState.name,
+                onValueChange = { name ->
+                    sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.NameChanged(name))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
             Field(
                 title = "Date",
-                value = date,
-                onValueChange = { date = it },
+                value = uiState.date,
+                onValueChange = { date ->
+                    sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.DateChanged(date))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
             Field(
                 title = "Time",
-                value = time,
-                onValueChange = { time = it },
+                value = uiState.time,
+                onValueChange = { time ->
+                    sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.TimeChanged(time))
+                },
                 modifier = Modifier.fillMaxWidth()
             )
             Field(
                 title = "Stock",
-                value = stock,
-                onValueChange = { stock = it },
+                value = uiState.stock,
+                onValueChange = { stock ->
+                    sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.StockChanged(stock))
+                },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -130,18 +133,8 @@ fun AddNewReminderPage(
 
         ElevatedButton(
             onClick = {
-                val currentStock = if (stock.isBlank()) { 0 } else stock.toInt()
-                val event = Event(
-                    type = type,
-                    name = name,
-                    date = date,
-                    time = time,
-                    stock = currentStock
-                )
-                if (userState.data != null && type.isNotBlank() && name.isNotBlank() && date.isNotBlank() && time.isNotBlank()) {
-                    userViewModel.setEvent(event = event, email = userState.data!!.email)
-                }
-                onSaveClick()
+                sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.SaveButtonClicked)
+                navigateBack()
             },
             shape = RoundedCornerShape(15),
             colors = ButtonDefaults.buttonColors(
@@ -156,14 +149,18 @@ fun AddNewReminderPage(
                 color = Color.White
             )
         }
+
+        ElevatedButton(
+            onClick = navigateBack,
+            shape = RoundedCornerShape(15),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = "Go Back",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.Black
+            )
+        }
     }
-}
-
-
-@Preview(showSystemUi = true)
-@Composable
-fun AddNewPreview() {
-//    AddNewReminderPage {
-//
-//    }
 }

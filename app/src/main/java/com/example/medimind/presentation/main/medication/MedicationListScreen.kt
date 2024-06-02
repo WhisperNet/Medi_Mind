@@ -1,4 +1,4 @@
-package com.example.medimind.presentation
+package com.example.medimind.presentation.main.medication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,31 +32,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.medimind.viewmodel.UserViewModel
+import com.example.medimind.domain.events.MedicationUIEvent
+import com.example.medimind.presentation.SharedViewModel
 
 @Composable
 fun MedicationListScreen(
+    sharedViewModel: SharedViewModel,
     onIconClick: () -> Unit,
-    onButtonClick: () -> Unit,
-    viewModel: UserViewModel = hiltViewModel()
+    onButtonClick: () -> Unit
 ) {
 
-    val userState by viewModel.userState.collectAsState()
-    if (userState.data != null) {
-        viewModel.getMedications(userState.data!!.email)
-    }
-    val medicationList by viewModel.medicationItems.collectAsState()
+    val medicationList = sharedViewModel.medicationItems.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -83,9 +77,11 @@ fun MedicationListScreen(
             Icon(imageVector = Icons.Default.Medication, contentDescription = "Medication Icon")
         }
 
-        Column (modifier = Modifier
-            .fillMaxWidth()
-            .weight(8f)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(8f)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -133,7 +129,8 @@ fun MedicationListScreen(
                                         .clip(RoundedCornerShape(15))
                                         .background(Color.Black)
                                         .clickable {
-
+                                            sharedViewModel.onMedicationUIEvent(MedicationUIEvent.RestockButtonClicked(it.name,
+                                                it.stock + 1))
                                         },
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -175,7 +172,12 @@ fun MedicationListScreen(
                                     contentDescription = null,
                                     modifier = Modifier.clickable {
                                         if (it.stock != 0) {
-                                            userState.data?.let { user -> viewModel.updateMedicationStock(it.name, user.email, it.stock -1) }
+                                            sharedViewModel.onMedicationUIEvent(
+                                                MedicationUIEvent.DecreaseStockButtonClicked(
+                                                    it.name,
+                                                    it.stock - 1
+                                                )
+                                            )
                                         }
                                     }
                                 )
@@ -185,14 +187,19 @@ fun MedicationListScreen(
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(48.dp))
-        
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             ElevatedButton(
-                onClick = onButtonClick,
+                onClick = {
+                    sharedViewModel.onMedicationUIEvent(MedicationUIEvent.AddNewButtonClicked)
+                    onButtonClick()
+                },
                 shape = RoundedCornerShape(15),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
@@ -206,20 +213,6 @@ fun MedicationListScreen(
                 )
             }
         }
-        
+
     }
-}
-
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun Preview() {
-//    MedicationListScreen(
-//        onIconClick = { /*TODO*/ },
-//        onButtonClick = { /*TODO*/ },
-////        viewModel = UserViewModel(
-////            firestoreRef = Firebase.firestore,
-////            auth = Firebase.auth
-////        )
-//    )
 }
