@@ -54,6 +54,9 @@ class SharedViewModel @Inject constructor(
     private val _navigationDrawerState = MutableStateFlow(false)
     val navigationDrawerState = _navigationDrawerState.asStateFlow()
 
+    private val _navigateBackState = MutableStateFlow(false)
+    val navigateBackState = _navigateBackState.asStateFlow()
+
     fun onHomeUIEvent(event: HomeUIEvent) {
         when (event) {
             HomeUIEvent.AddNewButtonClicked -> {
@@ -97,8 +100,13 @@ class SharedViewModel @Inject constructor(
 
             AddNewReminderUIEvent.SaveButtonClicked -> {
                 if (validateAllStates()) {
+                    _navigateBackState.update { true }
                     setEvent()
                 }
+            }
+
+            AddNewReminderUIEvent.GoBackButtonClicked -> {
+                _addNewReminderUIState.value = AddNewReminderUIState()
             }
         }
     }

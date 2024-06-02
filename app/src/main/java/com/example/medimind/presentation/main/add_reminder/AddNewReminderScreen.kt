@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessAlarms
 import androidx.compose.material3.ButtonDefaults
@@ -44,11 +46,13 @@ fun AddNewReminderScreen(
 
     val uiState = sharedViewModel.addNewReminderUIState.collectAsState().value
     val eventFrom = sharedViewModel.eventFrom.collectAsState().value
+    val navigateBackState = sharedViewModel.navigateBackState.collectAsState().value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 24.dp, horizontal = 16.dp),
+            .padding(vertical = 24.dp, horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
@@ -88,7 +92,11 @@ fun AddNewReminderScreen(
                     },
                     selectedItem = uiState.type,
                     onItemChange = { type ->
-                        sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.TypeChanged(type))
+                        sharedViewModel.onAddNewReminderUIEvent(
+                            AddNewReminderUIEvent.TypeChanged(
+                                type
+                            )
+                        )
                     },
                     title = "Type"
                 )
@@ -99,7 +107,8 @@ fun AddNewReminderScreen(
                 onValueChange = { name ->
                     sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.NameChanged(name))
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                errorMessage = uiState.nameError
             )
             Field(
                 title = "Date",
@@ -107,7 +116,12 @@ fun AddNewReminderScreen(
                 onValueChange = { date ->
                     sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.DateChanged(date))
                 },
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                errorMessage = uiState.dateError
             )
             Field(
                 title = "Time",
@@ -115,7 +129,11 @@ fun AddNewReminderScreen(
                 onValueChange = { time ->
                     sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.TimeChanged(time))
                 },
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                errorMessage = uiState.timeError
             )
             Field(
                 title = "Stock",
@@ -127,14 +145,17 @@ fun AddNewReminderScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
-                )
+                ),
+                errorMessage = uiState.stockError
             )
         }
 
         ElevatedButton(
             onClick = {
                 sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.SaveButtonClicked)
-                navigateBack()
+                if (navigateBackState) {
+                    navigateBack()
+                }
             },
             shape = RoundedCornerShape(15),
             colors = ButtonDefaults.buttonColors(
@@ -151,7 +172,10 @@ fun AddNewReminderScreen(
         }
 
         ElevatedButton(
-            onClick = navigateBack,
+            onClick = {
+                sharedViewModel.onAddNewReminderUIEvent(AddNewReminderUIEvent.GoBackButtonClicked)
+                navigateBack()
+            },
             shape = RoundedCornerShape(15),
             modifier = Modifier.fillMaxWidth(),
         ) {

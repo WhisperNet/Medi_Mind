@@ -71,7 +71,7 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpUIEvent.PasswordChanged -> {
-                _signUpUIState.value = signUpUIState.value.copy(passwordError = event.password)
+                _signUpUIState.value = signUpUIState.value.copy(password = event.password)
             }
 
             SignUpUIEvent.SignUpButtonClicked -> {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,12 +20,12 @@ fun Field(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+    errorMessage: String? = null
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = title, fontWeight = FontWeight.SemiBold, modifier = Modifier.align(Alignment.Start))
         TextField(
@@ -32,6 +33,14 @@ fun Field(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = keyboardOptions,
+            isError = errorMessage != null
         )
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
 }

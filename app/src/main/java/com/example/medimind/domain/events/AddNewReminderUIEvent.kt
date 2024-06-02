@@ -8,5 +8,6 @@ sealed interface AddNewReminderUIEvent {
     data class TimeChanged(val time: String): AddNewReminderUIEvent
     data class StockChanged(val stock: String): AddNewReminderUIEvent
     data object SaveButtonClicked: AddNewReminderUIEvent
+    data object GoBackButtonClicked: AddNewReminderUIEvent
 
 }
