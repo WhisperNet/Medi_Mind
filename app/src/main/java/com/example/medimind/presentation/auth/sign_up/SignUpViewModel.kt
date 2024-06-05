@@ -113,26 +113,22 @@ class SignUpViewModel @Inject constructor(
 
             if (response.isSuccessful) {
                 _requestOTP.value = response.body()
-
-                when (requestOTP.value?.statusDetail) {
-                    SUCCESS -> {
-                        _otpScreenState.update { true }
-                    }
-                    REGISTERED -> {
-                        _signUpUIState.value =
-                            signUpUIState.value.copy(phoneNoError = "User is already registered")
-                    }
-                    INVALID_OPERATOR -> {
-                        _signUpUIState.value =
-                            signUpUIState.value.copy(phoneNoError = "Provider must be a Robi operator")
-                    }
-
-                    else -> {
-
-                    }
+                if (requestOTP.value?.statusCode == "S1000") {
+                    _otpScreenState.update { true }
+                } else if (requestOTP.value?.statusDetail == REGISTERED) {
+                    _signUpUIState.value =
+                        signUpUIState.value.copy(phoneNoError = "User is already registered")
+                } else if (requestOTP.value?.statusDetail == INVALID_OPERATOR) {
+                    _signUpUIState.value =
+                        signUpUIState.value.copy(phoneNoError = "Provider must be a Robi operator")
+                }  else {
+                    _signUpUIState.value =
+                        signUpUIState.value.copy(phoneNoError = "Something went wrong. Please try again.")
                 }
             } else {
                 Log.d(TAG, "requestOTP: ${response.errorBody()}")
+                _signUpUIState.value =
+                    signUpUIState.value.copy(phoneNoError = "Something went wrong. Please try again.")
             }
         }
     }
@@ -146,13 +142,14 @@ class SignUpViewModel @Inject constructor(
             ).collectLatest { response ->
                 if (response.isSuccessful) {
                     _verifyOTP.value = response.body()
-                    if (verifyOTP.value?.statusDetail == SUCCESS) {
+                    if (verifyOTP.value?.statusCode == "S1000") {
                         signUp()
                     } else {
                         _signUpUIState.value = signUpUIState.value.copy(otpError = "Invalid OTP")
                     }
                 } else {
                     Log.d(TAG, "verifyOTP: ${response.errorBody()}")
+                    _signUpUIState.value = signUpUIState.value.copy(otpError = "Something went wrong. Please try again.")
                 }
             }
         }
